@@ -13,6 +13,8 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
+      overflow: hidden; /* Elimina la barra lateral */
     }
 
     .contador {
@@ -63,23 +65,28 @@
       el.innerText = val;
     }
 
+    // Permite que Streamer.bot lo llame
+    window.cambiar = cambiar;
+
+    // Si usas archivos txt para sumar valores
     async function revisarContador(id, archivo) {
       try {
         const response = await fetch(archivo + "?t=" + new Date().getTime());
         const data = await response.text();
-        const valor = parseInt(data.trim());
-        if (!isNaN(valor)) {
-          document.getElementById(id).innerText = valor;
+        const incremento = parseInt(data.trim());
+        if (!isNaN(incremento) && incremento > 0) {
+          cambiar(id, incremento);
         }
       } catch (err) {
-        console.log("Error:", archivo, err);
+        console.log("Error leyendo archivo:", archivo, err);
       }
     }
 
-    setInterval(() => {
-      revisarContador("sofi", "contador_sofi.txt");
-      revisarContador("tomy", "contador_tomy.txt");
-    }, 1000);
+    // Ejemplo para revisar los archivos cada segundo (opcional)
+    // setInterval(() => {
+    //   revisarContador('sofi', 'contador_sofi.txt');
+    //   revisarContador('tomy', 'contador_tomy.txt');
+    // }, 1000);
   </script>
 </body>
 </html>
