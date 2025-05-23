@@ -63,28 +63,22 @@
       el.innerText = val;
     }
 
-    // ✅ Esta línea permite usar cambiar() desde afuera si algún día lo necesitas
-    window.cambiar = cambiar;
-
-    // Función para leer archivos .txt locales
     async function revisarContador(id, archivo) {
       try {
         const response = await fetch(archivo + "?t=" + new Date().getTime());
         const data = await response.text();
-        const incremento = parseInt(data.trim());
-
-        if (!isNaN(incremento) && incremento > 0) {
-          cambiar(id, incremento);
+        const valor = parseInt(data.trim());
+        if (!isNaN(valor)) {
+          document.getElementById(id).innerText = valor;
         }
       } catch (err) {
-        console.log("Error leyendo archivo:", archivo, err);
+        console.log("Error:", archivo, err);
       }
     }
 
-    // Revisa cada segundo si hay cambios
     setInterval(() => {
-      revisarContador('sofi', 'contador_sofi.txt');
-      revisarContador('tomy', 'contador_tomy.txt');
+      revisarContador("sofi", "contador_sofi.txt");
+      revisarContador("tomy", "contador_tomy.txt");
     }, 1000);
   </script>
 </body>
