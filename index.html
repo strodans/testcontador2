@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contador de Muertes</title>
+  <style>
+    body {
+      background: transparent;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .contador {
+      text-align: center;
+    }
+
+    .nombre {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .numero {
+      font-size: 80px;
+      font-weight: bold;
+      border: 4px solid;
+      padding: 20px;
+      margin-bottom: 10px;
+      border-radius: 15px;
+    }
+
+    .sofi .numero {
+      color: #ff80d5;
+      border-color: #ff80d5;
+    }
+
+    .tomy .numero {
+      color: #ffe600;
+      border-color: #ffe600;
+    }
+  </style>
+</head>
+<body>
+  <div class="contador sofi">
+    <div class="nombre">Sofi</div>
+    <div class="numero" id="sofi">0</div>
+  </div>
+
+  <div class="contador tomy">
+    <div class="nombre">Tomy</div>
+    <div class="numero" id="tomy">0</div>
+  </div>
+
+  <script>
+    function cambiar(id, delta) {
+      const el = document.getElementById(id);
+      let val = parseInt(el.innerText) + delta;
+      if (val < 0) val = 0;
+      el.innerText = val;
+    }
+
+    // ✅ Esta línea permite usar cambiar() desde afuera si algún día lo necesitas
+    window.cambiar = cambiar;
+
+    // Función para leer archivos .txt locales
+    async function revisarContador(id, archivo) {
+      try {
+        const response = await fetch(archivo + "?t=" + new Date().getTime());
+        const data = await response.text();
+        const incremento = parseInt(data.trim());
+
+        if (!isNaN(incremento) && incremento > 0) {
+          cambiar(id, incremento);
+        }
+      } catch (err) {
+        console.log("Error leyendo archivo:", archivo, err);
+      }
+    }
+
+    // Revisa cada segundo si hay cambios
+    setInterval(() => {
+      revisarContador('sofi', 'contador_sofi.txt');
+      revisarContador('tomy', 'contador_tomy.txt');
+    }, 1000);
+  </script>
+</body>
+</html>
